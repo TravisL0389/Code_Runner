@@ -6,6 +6,9 @@ on:
       code:
         description: 'Paste your code here'
         required: true
+      filename:
+        description: 'What to name the file (e.g. index.html)'
+        required: true
 
 jobs:
   deploy:
@@ -13,6 +16,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Write code to file
+        run: echo "${{ github.event.inputs.code }}" > ${{ github.event.inputs.filename }}
+
+      - name: Commit and push file
+        run: |
+          git config user.email "coderunner@github.com"
+          git config user.name "CodeRunner"
+          git add .
+          git commit -m "CodeRunner deploy"
+          git push
 
       - name: Install Vercel CLI
         run: npm install -g vercel
