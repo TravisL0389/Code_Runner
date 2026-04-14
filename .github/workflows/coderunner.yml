@@ -3,6 +3,9 @@ name: CodeRunner Deploy
 on:
   workflow_dispatch:
     inputs:
+      projectName:
+        description: 'Project name (e.g. my-awesome-app)'
+        required: true
       code:
         description: 'Paste your code here'
         required: true
@@ -25,11 +28,11 @@ jobs:
           git config user.email "coderunner@github.com"
           git config user.name "CodeRunner"
           git add .
-          git commit -m "CodeRunner deploy"
+          git commit -m "CodeRunner deploy: ${{ github.event.inputs.projectName }}"
           git push
 
       - name: Install Vercel CLI
         run: npm install -g vercel
 
       - name: Deploy to Vercel
-        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --yes --name=${{ github.event.inputs.projectName }} --token=${{ secrets.VERCEL_TOKEN }}
