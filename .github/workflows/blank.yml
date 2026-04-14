@@ -1,0 +1,21 @@
+name: CodeRunner Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: 'Paste your code here'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
